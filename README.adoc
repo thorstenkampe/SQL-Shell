@@ -24,5 +24,7 @@ Additional features:
 ** PostgreSQL: https://www.pgcli.com[pgcli] (or legacy https://www.postgresql.org/docs/current/app-psql.html[psql])
 ** SQLite: https://litecli.com[litecli] (or legacy https://sqlite.org/cli.html[sqlite3])
 
-== Usage
+== Installation
+Copy `sql shell.py`, `sql shell.ini`, `tunnel.py`, and `tunnel.ini` to a directory of your choice.
 
+== Usage
