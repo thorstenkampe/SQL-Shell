@@ -29,8 +29,8 @@ Additional features:
 * copy `sql shell.py`, `sql shell.ini`, `tunnel.py`, and `tunnel.ini` to a directory of your choice.
 
 == Usage
-=== Standard
+=== standard
 image::screenshots/postgresql.gif[standard usage, width=65%, title=enter database parameters manually]
 
 === use legacy client
-image::screenshots/psql.gif[legacy client, width=65%, title=legacy client]
+image::screenshots/postgresql-psql.gif[legacy client, width=65%, title=legacy client]
