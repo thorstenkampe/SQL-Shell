@@ -29,3 +29,5 @@ Additional features:
 * copy `sql shell.py`, `sql shell.ini`, `tunnel.py`, and `tunnel.ini` to a directory of your choice.
 
 == Usage
+=== Standard
+image::screenshots/postgresql.gif[standard usage, width=65%, title=enter database parameters manually]
