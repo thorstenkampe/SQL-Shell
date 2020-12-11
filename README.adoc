@@ -31,3 +31,6 @@ Additional features:
 == Usage
 === Standard
 image::screenshots/postgresql.gif[standard usage, width=65%, title=enter database parameters manually]
+
+=== use legacy client
+image::screenshots/psql.gif[legacy client, width=65%, title=legacy client]
