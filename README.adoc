@@ -17,7 +17,7 @@ Additional features:
 ** `click`
 ** `sshtunnel`
 ** `windows-curses` (on Windows)
-* SQL shells you want to use
+* SQL shells
 ** MSSQL: https://github.com/dbcli/mssql-cli[mssql-cli] (or legacy https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[sqlcmd])
 ** MySQL: https://www.mycli.net[mycli] (or legacy https://dev.mysql.com/doc/refman/8.0/en/mysql.html[mysql])
 ** Oracle: https://www.oracle.com/database/technologies/appdev/sqlcl.html[SQLcl] (or legacy https://docs.oracle.com/en/database/oracle/oracle-database/21/sqpug/toc.htm[SQLPlus])
@@ -25,6 +25,7 @@ Additional features:
 ** SQLite: https://litecli.com[litecli] (or legacy https://sqlite.org/cli.html[sqlite3])
 
 == Installation
-Copy `sql shell.py`, `sql shell.ini`, `tunnel.py`, and `tunnel.ini` to a directory of your choice.
+* install Python3, required third-party Python modules, and SQL shell clients of your choice.
+* copy `sql shell.py`, `sql shell.ini`, `tunnel.py`, and `tunnel.ini` to a directory of your choice.
 
 == Usage
