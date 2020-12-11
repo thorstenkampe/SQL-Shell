@@ -2,7 +2,7 @@
 :toc:
 
 == Introduction
-Quick introduction to the project. Explain what it is, the functionality, and common usage.
+Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` or `pgcli` make your database interactions very convenient. They offer auto-completion, syntax highlighting, query history, a multi-line editor, and much more.
 
 == Requirements
 * Python3
