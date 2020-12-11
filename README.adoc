@@ -8,7 +8,9 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` or `pgcli` are very conveni
 `SQL Shell` makes using your favorite SQL client even more convenient: it brings a standard interface to enter the necessary information to access your database so you don't have to remember command line options and syntax. Timesaving defaults are used for host name, port, and user.
 
 Additional features:
-* use DSNs (pre-defined connection strings) for connections
+
+* legacy clients (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`) as fallback
+* use DSNs (pre-defined connection strings) for connections without typing
 * automatic tunneling if your database is not accessible from the outside (behind a firewall or listening only on localhost interface)
 
 == Requirements
@@ -30,7 +32,13 @@ Additional features:
 
 == Usage
 === standard
-image::screenshots/postgresql.gif[standard usage, width=65%, title=enter database parameters manually]
+image::screenshots/postgresql.gif[width=65%, title=enter database parameters manually]
 
-=== use legacy client
-image::screenshots/postgresql-psql.gif[legacy client, width=65%, title=legacy client]
+=== legacy client
+image::screenshots/postgresql-psql.gif[width=65%, title=legacy client]
+
+=== DSN
+image::screenshots/DSN.gif[width=65%, title=DSN]
+
+=== automatic tunnel
+image:screenshots/tunnel.gif[width=65%, title=tunnel]
