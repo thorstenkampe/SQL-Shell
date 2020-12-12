@@ -1,5 +1,6 @@
 = README
 :toc:
+:toclevels: 1
 :sectnums:
 :note-caption: :information_source:
 
