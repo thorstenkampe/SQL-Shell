@@ -20,8 +20,13 @@ os.environ['ESCDELAY'] = '0'  # no delay on Linux for Escape key
 config = configparser.ConfigParser(delimiters='=')
 
 def read_config():
+    if getattr(sys, 'frozen', False):  # PyInstaller
+        # https://pyinstaller.readthedocs.io/en/stable/runtime-information.html
+        script_dir = sys.executable
+    else:
+        script_dir = __file__
     # config file in same directory as this file
-    config_file = pathlib.Path(__file__).parent.joinpath('sql shell.ini')
+    config_file = pathlib.Path(script_dir).with_name('sql shell.ini')
     config.optionxform = str  # don't lowercase DSNs
     config.read(config_file, encoding='utf-8')
     os.environ.update(config['Environment'])
