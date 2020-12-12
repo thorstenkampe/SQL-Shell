@@ -16,7 +16,7 @@ Additional features:
 
 * DSNs (pre-defined connection strings) for connections without typing
 * automatic tunneling if your database is not accessible from the outside (behind a firewall or listening only on localhost interface)
-* legacy clients (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`) as fallback
+* legacy client (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`) support
 
 == Requirements
 * Linux
