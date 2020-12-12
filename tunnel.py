@@ -1,4 +1,4 @@
-import configparser, getpass, logging, pathlib
+import configparser, getpass, logging, pathlib, sys
 import sshtunnel
 
 ini_file = 'tunnel.ini'
@@ -21,8 +21,13 @@ class MockTunnel:
         pass
 
 def tunnel(remote_host, remote_port, local_port=0):  # `0` means random port
+    if getattr(sys, 'frozen', False):  # PyInstaller
+        # https://pyinstaller.readthedocs.io/en/stable/runtime-information.html
+        script_dir = sys.executable
+    else:
+        script_dir = __file__
     # config file in same directory as this file
-    config_file = pathlib.Path(__file__).parent.joinpath(ini_file)
+    config_file = pathlib.Path(script_dir).with_name(ini_file)
     config.read(config_file)
 
     try:
