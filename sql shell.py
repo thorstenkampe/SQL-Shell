@@ -163,7 +163,7 @@ class DbParams(ActionForm):
             if user == 'sys':
                 conn_params += ['as', 'sysdba']
 
-        # don't start tunnel for SQLite or DSNs connections
+        # don't start tunnel for SQLite or DSN connections
         if dbtype == 'SQLite' or self.dsn.value:
             host = None
             port = None
