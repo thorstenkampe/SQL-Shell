@@ -40,10 +40,10 @@ If you can't get `SQL Shell` running or have questions, open a https://github.co
 image::screenshots/standard.png[width=65%, title=enter database parameters manually]
 
 === DSN
-image:screenshots/DSN.gif[width=65%]
+image:screenshots/DSN.png[width=65%]
 
 === automatic tunnel
-image:screenshots/tunnel.gif[width=65%]
+image:screenshots/tunnel.png[width=65%]
 
 === legacy client
-image:screenshots/postgresql-psql.gif[width=65%]
+image:screenshots/legacy-client.png[width=65%]
