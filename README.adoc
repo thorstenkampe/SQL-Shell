@@ -11,9 +11,9 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` or `pgcli` are very conveni
 
 Additional features:
 
-* legacy clients (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`) as fallback
 * use DSNs (pre-defined connection strings) for connections without typing
 * automatic tunneling if your database is not accessible from the outside (behind a firewall or listening only on localhost interface)
+* legacy clients (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`) as fallback
 
 == Requirements
 * Linux
@@ -44,11 +44,11 @@ If you can't get `SQL Shell` running or have questions, open a https://github.co
 === standard
 image::screenshots/postgresql.gif[width=65%, title=enter database parameters manually]
 
-=== legacy client
-image:screenshots/postgresql-psql.gif[width=65%]
-
 === DSN
 image:screenshots/DSN.gif[width=65%]
 
 === automatic tunnel
 image:screenshots/tunnel.gif[width=65%]
+
+=== legacy client
+image:screenshots/postgresql-psql.gif[width=65%]
