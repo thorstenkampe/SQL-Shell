@@ -18,9 +18,7 @@ Additional features:
 == Requirements
 * Linux
 ** Python3
-** Python modules
-*** `click`
-*** `sshtunnel`
+** Python modules `click` and `sshtunnel`
 * SQL shells
 ** MSSQL: https://github.com/dbcli/mssql-cli[mssql-cli] (or legacy https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[sqlcmd])
 ** MySQL: https://www.mycli.net[mycli] (or legacy https://dev.mysql.com/doc/refman/8.0/en/mysql.html[mysql])
@@ -32,7 +30,7 @@ Additional features:
 * Windows
 ** copy `sql shell.exe`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice
 * Linux
-** install required third-party Python modules
+** install required third-party Python modules via `pip` or `conda`
 ** copy `sql shell.py`, `tunnel.py`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice
 * install SQL shell clients of your choice
 * modify `sql shell.ini` and optionally `tunnel.ini` to fit your environment
