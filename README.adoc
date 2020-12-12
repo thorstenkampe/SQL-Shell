@@ -29,7 +29,8 @@ Additional features:
 
 == Installation
 * install Python3, required third-party Python modules, and SQL shell clients of your choice.
-* copy `sql shell.py`, `sql shell.ini`, `tunnel.py`, and `tunnel.ini` to a directory of your choice.
+** Windows: copy `sql shell.exe`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice.
+** Linux: copy `sql shell.py`, `tunnel.py`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice.
 
 == Usage
 [NOTE]
