@@ -11,7 +11,7 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` or `pgcli` are very conveni
 
 Additional features:
 
-* use DSNs (pre-defined connection strings) for connections without typing
+* DSNs (pre-defined connection strings) for connections without typing
 * automatic tunneling if your database is not accessible from the outside (behind a firewall or listening only on localhost interface)
 * legacy clients (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`) as fallback
 
