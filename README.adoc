@@ -9,7 +9,7 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` or `pgcli` are very conveni
 
 `SQL Shell` makes using your favorite SQL client even more convenient:
 
-* a standard interface to enter information to access your database so you don't have to remember command line options and syntax
+* a standard interface to enter connection parameters so you don't have to remember command line options and syntax
 * defaults for host name, port, and user to save you time
 
 Additional features:
