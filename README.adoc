@@ -41,7 +41,7 @@ image::screenshots/standard.png[width=65%]
 === DSN
 image:screenshots/DSN.png[width=65%]
 
-=== automatic tunnel
+=== tunnel
 image:screenshots/tunnel.png[width=65%]
 
 === legacy client
