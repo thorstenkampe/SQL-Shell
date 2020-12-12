@@ -15,11 +15,11 @@ Additional features:
 * automatic tunneling if your database is not accessible from the outside (behind a firewall or listening only on localhost interface)
 
 == Requirements
-* Python3
-* Python modules
-** `click`
-** `sshtunnel`
-** `windows-curses` (on Windows)
+* Linux
+** Python3
+** Python modules
+*** `click`
+*** `sshtunnel`
 * SQL shells
 ** MSSQL: https://github.com/dbcli/mssql-cli[mssql-cli] (or legacy https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[sqlcmd])
 ** MySQL: https://www.mycli.net[mycli] (or legacy https://dev.mysql.com/doc/refman/8.0/en/mysql.html[mysql])
@@ -28,9 +28,13 @@ Additional features:
 ** SQLite: https://litecli.com[litecli] (or legacy https://sqlite.org/cli.html[sqlite3])
 
 == Installation
-* install Python3, required third-party Python modules, and SQL shell clients of your choice.
-** Windows: copy `sql shell.exe`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice.
-** Linux: copy `sql shell.py`, `tunnel.py`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice.
+* Windows
+** copy `sql shell.exe`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice
+* Linux
+** install required third-party Python modules
+** copy `sql shell.py`, `tunnel.py`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice
+* install SQL shell clients of your choice
+* modify `sql shell.ini` and optionally `tunnel.ini` to fit your environment
 
 == Usage
 [NOTE]
