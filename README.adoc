@@ -33,7 +33,7 @@ Additional features:
 ** install required third-party Python modules via `pip` or `conda`
 ** copy `sql shell.py`, `tunnel.py`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice
 * install SQL shell clients of your choice
-* modify `sql shell.ini` and optionally `tunnel.ini` to fit your environment
+* modify `sql shell.ini` and optionally `tunnel.ini` to match your environment
 
 == Usage
 [NOTE]
