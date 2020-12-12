@@ -24,7 +24,7 @@ Additional features:
 ** Python modules `click` and `sshtunnel`
 * SQL shells
 ** https://github.com/dbcli/mssql-cli[mssql-cli], https://www.mycli.net[mycli], https://www.oracle.com/database/technologies/appdev/sqlcl.html[SQLcl], https://www.pgcli.com[pgcli], https://litecli.com[litecli])
-** (or legacy https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[sqlcmd], https://dev.mysql.com/doc/refman/8.0/en/mysql.html[mysql], https://www.postgresql.org/docs/current/app-psql.html[psql], https://docs.oracle.com/en/database/oracle/oracle-database/21/sqpug/toc.htm[SQLPlus], https://sqlite.org/cli.html[sqlite3]
+** (or legacy https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[sqlcmd], `mysql`, `psql`, `SQLPlus`, https://sqlite.org/cli.html[sqlite3]
 
 == Installation
 * Windows
