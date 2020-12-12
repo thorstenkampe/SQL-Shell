@@ -37,7 +37,7 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` or `pgcli` are very conveni
 If you can't get `SQL Shell` running or have questions, open a https://github.com/thorstenkampe/SQL-Shell/issues[ticket]
 
 === standard
-image::screenshots/postgresql.gif[width=65%, title=enter database parameters manually]
+image::screenshots/standard.png[width=65%, title=enter database parameters manually]
 
 === DSN
 image:screenshots/DSN.gif[width=65%]
