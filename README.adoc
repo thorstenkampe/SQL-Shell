@@ -16,18 +16,15 @@ Additional features:
 
 * DSNs (pre-defined connection strings) for connections without typing
 * automatic tunneling if your database is not accessible from the outside (behind a firewall or listening only on localhost interface)
-* legacy client (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`) support
+* legacy client support
 
 == Requirements
 * Linux
 ** Python3
 ** Python modules `click` and `sshtunnel`
 * SQL shells
-** MSSQL: https://github.com/dbcli/mssql-cli[mssql-cli] (or legacy https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[sqlcmd])
-** MySQL: https://www.mycli.net[mycli] (or legacy https://dev.mysql.com/doc/refman/8.0/en/mysql.html[mysql])
-** Oracle: https://www.oracle.com/database/technologies/appdev/sqlcl.html[SQLcl] (or legacy https://docs.oracle.com/en/database/oracle/oracle-database/21/sqpug/toc.htm[SQLPlus])
-** PostgreSQL: https://www.pgcli.com[pgcli] (or legacy https://www.postgresql.org/docs/current/app-psql.html[psql])
-** SQLite: https://litecli.com[litecli] (or legacy https://sqlite.org/cli.html[sqlite3])
+** https://github.com/dbcli/mssql-cli[mssql-cli], https://www.mycli.net[mycli], https://www.oracle.com/database/technologies/appdev/sqlcl.html[SQLcl], https://www.pgcli.com[pgcli], https://sqlite.org/cli.html[sqlite3]
+** (or legacy https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[sqlcmd], https://dev.mysql.com/doc/refman/8.0/en/mysql.html[mysql], https://docs.oracle.com/en/database/oracle/oracle-database/21/sqpug/toc.htm[SQLPlus], https://www.postgresql.org/docs/current/app-psql.html[psql], https://litecli.com[litecli])
 
 == Installation
 * Windows
