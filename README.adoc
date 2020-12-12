@@ -33,7 +33,7 @@ Additional features:
 
 == Usage
 [NOTE]
-If you can't get `SQL Shell` running, open a https://github.com/thorstenkampe/SQL-Shell/issues[ticket]
+If you can't get `SQL Shell` running or have questions, open a https://github.com/thorstenkampe/SQL-Shell/issues[ticket]
 
 === standard
 image::screenshots/postgresql.gif[width=65%, title=enter database parameters manually]
