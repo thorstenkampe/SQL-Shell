@@ -26,7 +26,7 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` and `pgcli` are very conven
 * Windows
 ** copy `sql shell.exe`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice
 * Linux
-** install required third-party Python modules via `pip`
+** install required third-party Python modules
 ** copy `sql shell.py`, `tunnel.py`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice
 * install SQL shell clients of your choice
 * modify `sql shell.ini` and optionally `tunnel.ini` to match your environment
