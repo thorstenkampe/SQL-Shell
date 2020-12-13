@@ -13,14 +13,12 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` and `pgcli` are very conven
 * defaults for host name, port, and user to save you time
 * DSNs (pre-defined connection strings) for connection without typing
 * automatic tunneling if your database is behind a firewall or listening only on localhost interface
-* legacy client support
+* legacy client support (https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[`sqlcmd`], `mysql`, `SQLPlus`, `psql`, https://sqlite.org/cli.html[`sqlite3`])
 
 == Requirements
 * Windows: none
 * Linux: Python3, modules `click`, `npyscreen`, and `sshtunnel`
-* SQL shells:
-** https://github.com/dbcli/mssql-cli[`mssql-cli`], https://www.mycli.net[`mycli`], https://www.oracle.com/database/technologies/appdev/sqlcl.html[`SQLcl`], https://www.pgcli.com[`pgcli`], https://litecli.com[`litecli`]
-** (or legacy https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[`sqlcmd`], `mysql`, `SQLPlus`, `psql`, https://sqlite.org/cli.html[`sqlite3`])
+* SQL shells: https://github.com/dbcli/mssql-cli[`mssql-cli`], https://www.mycli.net[`mycli`], https://www.oracle.com/database/technologies/appdev/sqlcl.html[`SQLcl`], https://www.pgcli.com[`pgcli`], https://litecli.com[`litecli`]
 
 == Installation
 * Windows
