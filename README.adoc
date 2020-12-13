@@ -15,18 +15,13 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` and `pgcli` are very conven
 * automatic tunneling if your database is behind a firewall or listening only on localhost interface
 * legacy client support (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`)
 
-== Requirements
-* Windows: none
-* Linux: Python3, modules `click`, `npyscreen`, and `sshtunnel`
-* SQL shells: https://github.com/dbcli/mssql-cli[`mssql-cli`], https://www.mycli.net[`mycli`], https://www.oracle.com/database/technologies/appdev/sqlcl.html[`SQLcl`], https://www.pgcli.com[`pgcli`], https://litecli.com[`litecli`]
-
 == Installation
 * Windows
 ** copy `sql shell.exe`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice
 * Linux
-** install required third-party Python modules
+** install third-party Python modules `click`, `npyscreen`, and `sshtunnel`
 ** copy `sql shell.py`, `tunnel.py`, `sql shell.ini`, and `tunnel.ini` to a directory of your choice
-* install SQL shell clients of your choice
+* install SQL shell clients of your choice (https://github.com/dbcli/mssql-cli[`mssql-cli`], https://www.mycli.net[`mycli`], https://www.oracle.com/database/technologies/appdev/sqlcl.html[`SQLcl`], https://www.pgcli.com[`pgcli`], https://litecli.com[`litecli`])
 * modify `sql shell.ini` and optionally `tunnel.ini` to match your environment
 
 == Usage
