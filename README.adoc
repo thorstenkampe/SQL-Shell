@@ -13,7 +13,7 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` and `pgcli` are very conven
 * defaults for host name, port, and user to save you time
 * DSNs (pre-defined connection strings) for connection without typing
 * automatic tunneling if your database is behind a firewall or listening only on localhost interface
-* legacy client support (https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[`sqlcmd`], `mysql`, `SQLPlus`, `psql`, https://sqlite.org/cli.html[`sqlite3`])
+* legacy client support (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`)
 
 == Requirements
 * Windows: none
