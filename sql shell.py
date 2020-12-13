@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
-import configparser, os, pathlib, subprocess, sys
-import click, curses, sshtunnel
+import configparser, curses, os, pathlib, subprocess, sys
+import click, sshtunnel
 import tunnel
 # https://npyscreen.readthedocs.io/
 from npyscreen import *  # NOSONAR
@@ -196,7 +196,7 @@ class DbParams(ActionForm):
         except KeyboardInterrupt:
             pass
 
-        except (ValueError, sshtunnel.BaseSSHTunnelForwarderError) as exception:
+        except (FileNotFoundError, ValueError, sshtunnel.BaseSSHTunnelForwarderError) as exception:
             print(exception)
 
         print()
