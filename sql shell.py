@@ -29,7 +29,10 @@ def read_config():
     config_file = pathlib.Path(script_dir).with_name('sql shell.ini')
     config.optionxform = str  # don't lowercase DSNs
     config.read(config_file, encoding='utf-8')
-    os.environ.update(config['Environment'])
+    try:
+        os.environ.update(config['Environment'])
+    except KeyError:
+        pass
 
 read_config()
 click.clear()
@@ -52,7 +55,10 @@ class DbParams(ActionForm):
                                       **widget_defaults)
 
         # DSNs changes in config file will not be updated in this widget
-        dsns = ['...'] + [f'{index+1}. {item}' for index, item in enumerate(config['DSN'])]
+        try:
+            dsns = ['...'] + [f'{index+1}. {item}' for index, item in enumerate(config['DSN'])]
+        except KeyError:
+            dsns = ['...']
         self.dsn    = self.add(TitleCombo, name='- DSN:', value=0, values=dsns,
                                **widget_defaults)
 
@@ -110,6 +116,7 @@ class DbParams(ActionForm):
         sqlshell     = config[shelltype]['shell']
         prompt       = config[shelltype].get('prompt', '') + ' '
         startup_file = config[shelltype].get('startup_file', '')
+        sqlhelp      = config[shelltype].get('help')
 
         # OPTIONS AND CONNECTION PARAMETERS
         # effective params are: opts[shelltype], (DSN|conn_params[dbtype]), env_vars[shelltype]
@@ -182,7 +189,8 @@ class DbParams(ActionForm):
         #
 
         curses.endwin()
-        print(config[shelltype]['help'], end = '\n\n')
+        if sqlhelp:
+            print(sqlhelp, end = '\n\n')
 
         os.environ.update(env_vars)
         try:
