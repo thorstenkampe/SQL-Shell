@@ -156,7 +156,7 @@ class DbParams(ActionForm):
         except KeyError:
             section = {}
 
-        prompt       = section.get('prompt', '') + ' '
+        prompt       = section.get('prompt', '')[1:-1]
         startup_file = section.get('startup_file', '')
         sqlhelp      = section.get('help')
 
@@ -258,11 +258,11 @@ class DbParams(ActionForm):
                 conn_params += ['as', 'sysdba']
 
         elif dbtype == 'PostgreSQL':
-            if prompt == ' ' and shelltype == 'PostgreSQL':
+            if not prompt and shelltype == 'PostgreSQL':
                 opts = opts[:2]
 
         elif dbtype == 'SQLite':
-            if prompt == ' ' and shelltype == 'SQLite':
+            if not prompt and shelltype == 'SQLite':
                 opts = opts[:2]
 
             if db:
