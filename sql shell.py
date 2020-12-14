@@ -174,37 +174,37 @@ class DbParams(ActionForm):
         # effective params are: opts[shelltype], (DSN|conn_params[dbtype]), env_vars[shelltype]
         params = {
             # `-N -C` = "encrypt, trust server certificate"  (NOSONAR)
-            'MSSQL':        {
+            'MSSQL': {
                 'opts':        ['-N', '-C', '--mssqlclirc', startup_file],
                 'conn_params': ['-U', user, '-P', passwd, '-S', '{host},{port}', '-d', db]
             },
 
-            'MSSQL-2':      {
+            'MSSQL-2': {
                 'opts':        ['-N', '-C'],
                 'env_vars':    {'SQLCMDINI': startup_file}
             },
 
-            'MySQL':        {
+            'MySQL': {
                 'opts':        ['--myclirc', startup_file],
                 'conn_params': ['-u', user, f'-p{passwd}', '-h', '{host}', '-P', '{port}', '-D', db]
             },
 
-            'MySQL-2':      {
+            'MySQL-2': {
                 'opts':        [f'--defaults-file={startup_file}', '--protocol=TCP']
             },
 
-            'Oracle':       {
+            'Oracle': {
                 'opts':        ['-logon'],
                 'conn_params': [f'{user}/{passwd}@//{{host}}:{{port}}/{db}'],
                 'env_vars':    {'SQLPATH': startup_file}
             },
 
-            'Oracle-2':     {
+            'Oracle-2': {
                 'opts':        ['-l'],
                 'env_vars':    {'SQLPATH': ''}
             },
 
-            'PostgreSQL':   {
+            'PostgreSQL': {
                 'opts':        ['--pgclirc', startup_file, '--prompt', prompt],
                 'conn_params': [f'postgres://{user}:{passwd}@{{host}}:{{port}}/{db}']
             },
@@ -213,13 +213,13 @@ class DbParams(ActionForm):
                 'env_vars':    {'PSQLRC': startup_file}
             },
 
-            'SQLite':       {
+            'SQLite': {
                 'opts':        ['--liteclirc', startup_file, '--prompt', prompt],
                 # replace "\" with "/" for litecli prompt
                 'conn_params': [pathlib.Path(db).as_posix()]
             },
 
-            'SQLite-2':     {
+            'SQLite-2': {
                 'opts':        ['-init', startup_file]
             }
         }
