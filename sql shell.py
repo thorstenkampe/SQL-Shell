@@ -1,19 +1,53 @@
 #! /usr/bin/env python
 
 import configparser, curses, os, pathlib, subprocess, sys
-import click, sshtunnel
+import click, pycompat, sshtunnel
 import tunnel
 # https://npyscreen.readthedocs.io/
 from npyscreen import *  # NOSONAR
 
-widget_defaults = {'use_two_lines': False, 'begin_entry_at': 17}
-dbms_defaults   = {
-    'MSSQL':      {'port': 1433, 'user': 'sa'},
-    'MySQL':      {'port': 3306, 'user': 'root'},
-    'Oracle':     {'port': 1521, 'user': 'sys'},
-    'PostgreSQL': {'port': 5432, 'user': 'postgres'},
-    'SQLite':     {}
+widget_defaults = {
+    'use_two_lines':  False,
+    'begin_entry_at': 17
 }
+
+dbms_defaults   = {
+    'MSSQL': {
+        'port':   1433,
+        'user':   'sa',
+        'shell':  'mssql-cli',
+        'shell-windows': 'mssql-cli.bat',
+        'legacy': 'sqlcmd'
+    },
+
+    'MySQL': {
+        'port':   3306,
+        'user':   'root',
+        'shell':  'mycli',
+        'legacy': 'mysql'
+    },
+
+    'Oracle': {
+        'port':   1521,
+        'user':   'sys',
+        'shell':  'sql',
+        'shell-windows': 'sql.exe',
+        'legacy': 'sqlplus'
+    },
+
+    'PostgreSQL': {
+        'port':   5432,
+        'user':   'postgres',
+        'shell':  'pgcli',
+        'legacy': 'psql'
+    },
+
+    'SQLite': {
+        'shell':  'litecli',
+        'legacy': 'sqlite3'
+    }
+}
+
 tunnel.logger.setLevel('DEBUG')
 os.environ['ESCDELAY'] = '0'  # no delay on Linux for Escape key
 # specify delimiter because of DSNs ("MSSQL: name = ...")
@@ -103,68 +137,114 @@ class DbParams(ActionForm):
             return
 
         read_config()
-        dbtype       = list(dbms_defaults)[self.dbtype.value - 1]
-        db_defaults  = dbms_defaults[dbtype]
-        shelltype    = dbtype if not self.legacy_client.value else f'{dbtype}-2'
+        dbtype      = list(dbms_defaults)[self.dbtype.value - 1]
+        db_defaults = dbms_defaults[dbtype]
+        shelltype   = dbtype if not self.legacy_client.value else f'{dbtype}-2'
         # `mssql-cli` does not connect to local loopback address with `-S localhost`
-        dsn          = config['DSN'][list(config['DSN'])[self.dsn.value - 1]]
-        host         = self.host.value or '127.0.0.1'
-        port         = self.port.value or db_defaults.get('port')
-        user         = self.user.value or db_defaults.get('user')
-        passwd       = self.passwd.value
-        db           = self.db.value
-        sqlshell     = config[shelltype]['shell']
-        prompt       = config[shelltype].get('prompt', '') + ' '
-        startup_file = config[shelltype].get('startup_file', '')
-        sqlhelp      = config[shelltype].get('help')
+        dsn         = config['DSN'][list(config['DSN'])[self.dsn.value - 1]]
+        host        = self.host.value or '127.0.0.1'
+        port        = self.port.value or db_defaults.get('port')
+        user        = self.user.value or db_defaults.get('user')
+        passwd      = self.passwd.value
+        db          = self.db.value
+
+        try:
+            section = config[shelltype]
+        except KeyError:
+            section = {}
+
+        prompt       = section.get('prompt', '') + ' '
+        startup_file = section.get('startup_file', '')
+        sqlhelp      = section.get('help')
+
+        if self.legacy_client.value:
+            defshell = db_defaults['legacy']
+        else:
+            if pycompat.system.is_windows:
+                try:
+                    defshell = db_defaults['shell-windows']
+                except KeyError:
+                    defshell = db_defaults['shell']
+            else:
+                defshell = db_defaults['shell']
+
+        sqlshell = section.get('shell', defshell)
 
         # OPTIONS AND CONNECTION PARAMETERS
         # effective params are: opts[shelltype], (DSN|conn_params[dbtype]), env_vars[shelltype]
         params = {
             # `-N -C` = "encrypt, trust server certificate"  (NOSONAR)
-            'MSSQL':        {'opts':        ['-N', '-C', '--mssqlclirc', startup_file],
-                             'conn_params': ['-U', user, '-P', passwd, '-S', '{host},{port}', '-d', db]},
+            'MSSQL':        {
+                'opts':        ['-N', '-C', '--mssqlclirc', startup_file],
+                'conn_params': ['-U', user, '-P', passwd, '-S', '{host},{port}', '-d', db]
+            },
 
-            'MSSQL-2':      {'opts':        ['-N', '-C'],
-                             'env_vars':    {'SQLCMDINI': startup_file}},
+            'MSSQL-2':      {
+                'opts':        ['-N', '-C'],
+                'env_vars':    {'SQLCMDINI': startup_file}
+            },
 
-            'MySQL':        {'opts':        ['--myclirc', startup_file],
-                             'conn_params': ['-u', user, f'-p{passwd}', '-h', '{host}', '-P', '{port}', '-D', db]},
+            'MySQL':        {
+                'opts':        ['--myclirc', startup_file],
+                'conn_params': ['-u', user, f'-p{passwd}', '-h', '{host}', '-P', '{port}', '-D', db]
+            },
 
-            'MySQL-2':      {'opts':        [f'--defaults-file={startup_file}', '--protocol=TCP']},
+            'MySQL-2':      {
+                'opts':        [f'--defaults-file={startup_file}', '--protocol=TCP']
+            },
 
-            'Oracle':       {'opts':        ['-logon'],
-                             'conn_params': [f'{user}/{passwd}@//{{host}}:{{port}}/{db}'],
-                             'env_vars':    {'SQLPATH': startup_file}},
+            'Oracle':       {
+                'opts':        ['-logon'],
+                'conn_params': [f'{user}/{passwd}@//{{host}}:{{port}}/{db}'],
+                'env_vars':    {'SQLPATH': startup_file}
+            },
 
-            'Oracle-2':     {'opts':        ['-l'],
-                             'env_vars':    {'SQLPATH': ''}},
+            'Oracle-2':     {
+                'opts':        ['-l'],
+                'env_vars':    {'SQLPATH': ''}
+            },
 
-            'PostgreSQL':   {'opts':        ['--pgclirc', startup_file, '--prompt', prompt],
-                             'conn_params': [f'postgres://{user}:{passwd}@{{host}}:{{port}}/{db}']},
+            'PostgreSQL':   {
+                'opts':        ['--pgclirc', startup_file, '--prompt', prompt],
+                'conn_params': [f'postgres://{user}:{passwd}@{{host}}:{{port}}/{db}']
+            },
 
-            'PostgreSQL-2': {'env_vars':    {'PSQLRC': startup_file}},
+            'PostgreSQL-2': {
+                'env_vars':    {'PSQLRC': startup_file}
+            },
 
-            'SQLite':       {'opts':        ['--liteclirc', startup_file, '--prompt', prompt],
-                             # replace "\" with "/" for litecli prompt
-                             'conn_params': [pathlib.Path(db).as_posix()]},
+            'SQLite':       {
+                'opts':        ['--liteclirc', startup_file, '--prompt', prompt],
+                # replace "\" with "/" for litecli prompt
+                'conn_params': [pathlib.Path(db).as_posix()]
+            },
 
-            'SQLite-2':     {'opts':        ['-init', startup_file]}
+            'SQLite-2':     {
+                'opts':        ['-init', startup_file]
+            }
         }
 
-        opts        = params.get(shelltype, {}).get('opts', [])
+        opts        = params[shelltype].get('opts', [])
         conn_params = params[dbtype]['conn_params']
-        env_vars    = params.get(shelltype, {}).get('env_vars', {})
+        env_vars    = params[shelltype].get('env_vars', {})
 
         # SPECIAL CASES FOR RDBMS
-        # named pipe connection to LocalDB
-        localdb = r'(localdb)\mssqllocaldb'
-        if   dbtype == 'MSSQL' and (localdb in dsn.lower() or (host and host.lower() == localdb)):
-            opts.remove('-N')          # `-N` = "encrypt"  (NOSONAR)
-            conn_params[5] = '{host}'  # host,port -> host
+        if   dbtype == 'MSSQL':
+            # named pipe connection to LocalDB
+            localdb = r'(localdb)\mssqllocaldb'
+            if localdb in dsn.lower() or host.lower() == localdb:
+                opts.remove('-N')          # `-N` = "encrypt"  (NOSONAR)
+                conn_params[5] = '{host}'  # host,port -> host
 
-        elif dbtype == 'MySQL' and not passwd:
-            del conn_params[2]
+        elif dbtype == 'MySQL':
+            if not passwd:
+                conn_params.remove('-p')
+
+            if not startup_file:
+                if shelltype == 'MySQL':
+                    opts = []
+                else:
+                    opts.remove('--defaults-file=')
 
         elif dbtype == 'Oracle':
             if not db:
@@ -175,18 +255,29 @@ class DbParams(ActionForm):
             if user == 'sys':
                 conn_params += ['as', 'sysdba']
 
-        # don't start tunnel for SQLite or DSN connections
-        if dbtype == 'SQLite' or self.dsn.value:
+        elif dbtype == 'PostgreSQL':
+            if prompt == ' ' and shelltype == 'PostgreSQL':
+                opts = opts[:2]
+
+        elif dbtype == 'SQLite':
+            if prompt == ' ' and shelltype == 'SQLite':
+                opts = opts[:2]
+
+            # don't start tunnel for SQLite
+            host = None
+            port = None
+        #
+
+        if self.dsn.value:
+            # don't start tunnel for DSN connections
             host = None
             port = None
 
-        # DSNs have precedence over manually entered connection parameters
-        if self.dsn.value:
+            # DSNs have precedence over manually entered connection parameters
             if dbtype == 'SQLite':
                 conn_params = [dsn]
             else:
                 conn_params = dsn.split()
-        #
 
         curses.endwin()
         if sqlhelp:
