@@ -140,8 +140,11 @@ class DbParams(ActionForm):
         dbtype      = list(dbms_defaults)[self.dbtype.value - 1]
         db_defaults = dbms_defaults[dbtype]
         shelltype   = dbtype if not self.legacy_client.value else f'{dbtype}-2'
+        try:
+            dsn = config['DSN'][list(config['DSN'])[self.dsn.value - 1]]
+        except KeyError:
+            dsn = ''
         # `mssql-cli` does not connect to local loopback address with `-S localhost`
-        dsn         = config['DSN'][list(config['DSN'])[self.dsn.value - 1]]
         host        = self.host.value or '127.0.0.1'
         port        = self.port.value or db_defaults.get('port')
         user        = self.user.value or db_defaults.get('user')
@@ -215,8 +218,7 @@ class DbParams(ActionForm):
 
             'SQLite': {
                 'opts':        ['--liteclirc', startup_file, '--prompt', prompt],
-                # replace "\" with "/" for litecli prompt
-                'conn_params': [pathlib.Path(db).as_posix()]
+                'conn_params': [db]
             },
 
             'SQLite-2': {
@@ -262,6 +264,10 @@ class DbParams(ActionForm):
         elif dbtype == 'SQLite':
             if prompt == ' ' and shelltype == 'SQLite':
                 opts = opts[:2]
+
+            if db:
+                # replace "\" with "/" for litecli prompt
+                conn_params = [pathlib.Path(db).as_posix()]
 
             # don't start tunnel for SQLite
             host = None
