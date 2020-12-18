@@ -8,4 +8,4 @@ SQL Shell makes using your favorite SQL client even more convenient:
 * automatic tunneling if your database is behind a firewall or listening only on localhost interface
 * legacy client support (sqlcmd, mysql, SQLPlus, psql, sqlite3)
 
-![text](../screenshots/standard.png)
+![](https://github.com/thorstenkampe/SQL-Shell/blob/main/screenshots/standard.png)
