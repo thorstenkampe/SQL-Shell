@@ -25,10 +25,10 @@ If you can't get `SQL Shell` running or have questions, open a [ticket](https://
 ![](../screenshots/standard.png)
 
 ### DSN
-image:screenshots/DSN.png[width=65%]
+![](../screenshots/DSN.png)
 
 ### tunnel
-image:screenshots/tunnel.png[width=65%]
+![](../screenshots/tunnel.png)
 
 ### legacy client
-image:screenshots/legacy-client.png[width=65%]
+![](../screenshots/legacy-client.png)
