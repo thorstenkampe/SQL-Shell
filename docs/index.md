@@ -21,14 +21,14 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` and `pgcli` are very conven
 ## Usage
 If you can't get `SQL Shell` running or have questions, open a [ticket](https://github.com/thorstenkampe/SQL-Shell/issues)
 
-=== standard
-![](screenshots/standard.png)
+### standard
+![](../screenshots/standard.png)
 
-=== DSN
+### DSN
 image:screenshots/DSN.png[width=65%]
 
-=== tunnel
+### tunnel
 image:screenshots/tunnel.png[width=65%]
 
-=== legacy client
+### legacy client
 image:screenshots/legacy-client.png[width=65%]
