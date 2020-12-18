@@ -15,7 +15,7 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` and `pgcli` are very conven
 * Linux
   * install third-party Python modules `click`, `npyscreen`, `pycompat`, and `sshtunnel`
   * copy `sql shell.py` and `tunnel.py` to a directory of your choice
-* install SQL shell clients of your choice ([`mssql-cli`](https://github.com/dbcli/mssql-cli), [`mycli`](https://www.mycli.net), https://www.oracle.com/database/technologies/appdev/sqlcl.html[`SQLcl`], https://www.pgcli.com[`pgcli`], https://litecli.com[`litecli`])
+* install SQL shell clients of your choice ([`mssql-cli`](https://github.com/dbcli/mssql-cli), [`mycli`](https://www.mycli.net), [`SQLcl`](https://www.oracle.com/database/technologies/appdev/sqlcl.html), [`pgcli`](https://www.pgcli.com), [`litecli`](https://litecli.com))
 * optional: edit `sql shell.ini` and `tunnel.ini` to match your environment
 
 ## Usage
