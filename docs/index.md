@@ -19,11 +19,10 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` and `pgcli` are very conven
 * optional: edit `sql shell.ini` and `tunnel.ini` to match your environment
 
 ## Usage
-[NOTE]
-If you can't get `SQL Shell` running or have questions, open a https://github.com/thorstenkampe/SQL-Shell/issues[ticket]
+If you can't get `SQL Shell` running or have questions, open a [ticket](https://github.com/thorstenkampe/SQL-Shell/issues)
 
 === standard
-image::screenshots/standard.png[width=65%]
+![](screenshots/standard.png)
 
 === DSN
 image:screenshots/DSN.png[width=65%]
