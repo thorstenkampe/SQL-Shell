@@ -1,4 +1,4 @@
-Modern SQL shells are very convenient: they offer auto-completion, syntax highlighting, query history, a multi-line editor, and much more.
+Modern SQL shells like SQLcl, mycli, pgcli, and mssql-cli are very convenient: they offer auto-completion, syntax highlighting, query history, a multi-line editor, and much more.
 
 SQL Shell makes using your favorite SQL client even more convenient:
 
