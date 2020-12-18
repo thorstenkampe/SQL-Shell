@@ -22,7 +22,7 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` and `pgcli` are very conven
 If you can't get `SQL Shell` running or have questions, open a [ticket](https://github.com/thorstenkampe/SQL-Shell/issues)
 
 ### standard
-![](SQL-Shell/docs/screenshots/standard.png)
+![](/screenshots/standard.png)
 
 ### DSN
 ![](../screenshots/DSN.png)
