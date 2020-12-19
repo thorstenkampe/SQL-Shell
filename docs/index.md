@@ -6,6 +6,6 @@ SQL Shell makes using SQL clients even more convenient:
 * defaults for host name, port, and user to save you time
 * pre-defined connection strings for connection without typing
 * automatic tunneling if your database is behind a firewall or listening only on localhost interface
-* legacy client support (sqlcmd, mysql, SQLPlus, psql, sqlite3)
+* legacy client support
 
 ![SQL Shell interface](https://raw.githubusercontent.com/thorstenkampe/SQL-Shell/main/screenshots/standard-pgcli.png)
