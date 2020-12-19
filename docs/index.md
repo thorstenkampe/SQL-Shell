@@ -8,4 +8,4 @@ SQL Shell makes using SQL clients even more convenient:
 * automatic tunneling if your database is behind a firewall or listening only on localhost interface
 * legacy client support (sqlcmd, mysql, SQLPlus, psql, sqlite3)
 
-![](https://raw.githubusercontent.com/thorstenkampe/SQL-Shell/main/screenshots/standard.png)
+![SQL Shell interface](https://raw.githubusercontent.com/thorstenkampe/SQL-Shell/main/screenshots/standard-pgcli.png)
