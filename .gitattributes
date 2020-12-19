@@ -1,7 +1,8 @@
-## * https://git-scm.com/docs/gitattributes
-## * https://softwareengineering.stackexchange.com/a/367655/381493
+# * https://git-scm.com/docs/gitattributes
+# * https://softwareengineering.stackexchange.com/a/367655/381493
 
-# exclude from the generated tarball
-docs        export-ignore
-screenshots export-ignore
-README.adoc export-ignore
+# exclude from generated tarball
+docs           export-ignore
+screenshots    export-ignore
+.gitattributes export-ignore
+README.adoc    export-ignore

@@ -16,12 +16,13 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` and `pgcli` are very conven
 * legacy client support (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`)
 
 == Requirements ==
-* Python modules `click`, `npyscreen`, `pycompat`, and `sshtunnel` (when using the source code files)
+* Linux only: Python modules `click`, `npyscreen`, `pycompat`, and `sshtunnel`
 * SQL shell clients (https://github.com/dbcli/mssql-cli[`mssql-cli`], https://www.mycli.net[`mycli`], https://www.oracle.com/database/technologies/appdev/sqlcl.html[`SQLcl`], https://www.pgcli.com[`pgcli`], https://litecli.com[`litecli`])
 
 == Installation
-. download release (source code or Windows binary)
+. download release
 . optional: edit `sql shell.ini` and `tunnel.ini` to match your environment
+* run `sql shell.exe` (Windows) or `sql shell.py` (Linux)
 
 == Usage
 [NOTE]
