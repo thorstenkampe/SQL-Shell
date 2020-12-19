@@ -13,16 +13,17 @@ Modern SQL shells like `mssql-cli`, `mycli`, `SQLcl` and `pgcli` are very conven
 * defaults for host name, port, and user to save you time
 * pre-defined connection strings for connection without typing
 * automatic tunneling if your database is behind a firewall or listening only on localhost interface
-* legacy client support (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`)
+* legacy client support
 
 == Requirements ==
+* SQL shell clients (https://github.com/dbcli/mssql-cli[`mssql-cli`], https://www.mycli.net[`mycli`], https://www.oracle.com/database/technologies/appdev/sqlcl.html[`SQLcl`], https://www.pgcli.com[`pgcli`], https://litecli.com[`litecli`]) or legacy clients (`sqlcmd`, `mysql`, `SQLPlus`, `psql`, `sqlite3`)
 * Linux only: Python modules `click`, `npyscreen`, `pycompat`, and `sshtunnel`
-* SQL shell clients (https://github.com/dbcli/mssql-cli[`mssql-cli`], https://www.mycli.net[`mycli`], https://www.oracle.com/database/technologies/appdev/sqlcl.html[`SQLcl`], https://www.pgcli.com[`pgcli`], https://litecli.com[`litecli`])
 
 == Installation
 . download release
+. verify requirements
 . optional: edit `sql shell.ini` and `tunnel.ini` to match your environment
-* run `sql shell.exe` (Windows) or `sql shell.py` (Linux)
+. run `sql shell.exe` (Windows) or `sql shell.py` (Linux)
 
 == Usage
 [NOTE]
