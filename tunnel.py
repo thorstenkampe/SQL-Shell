@@ -1,3 +1,5 @@
+# https://sshtunnel.readthedocs.io/en/latest/
+
 import configparser, getpass, logging, pathlib, sys
 import sshtunnel
 
@@ -45,7 +47,7 @@ def tunnel(remote_host, remote_port, local_port=0):  # `0` means random port
             ssh_port            = int(section['proxy_port']),
             ssh_username        = section['proxy_user'],
             remote_bind_address = (section['remote_host'], int(remote_port)),
-            local_bind_address  = ('127.0.0.1', local_port)
+            local_bind_address  = ('localhost', local_port)
         )
 
     return tunnel

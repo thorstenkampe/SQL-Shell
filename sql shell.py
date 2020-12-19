@@ -144,8 +144,7 @@ class DbParams(ActionForm):
             dsn = config['DSN'][list(config['DSN'])[self.dsn.value - 1]]
         except KeyError:
             dsn = ''
-        # `mssql-cli` does not connect to local loopback address with `-S localhost`
-        host        = self.host.value or '127.0.0.1'
+        host        = self.host.value or 'localhost'
         port        = self.port.value or db_defaults.get('port')
         user        = self.user.value or db_defaults.get('user')
         passwd      = self.passwd.value
