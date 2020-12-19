@@ -1,6 +1,6 @@
 Modern SQL shells like SQLcl, mycli, pgcli, and mssql-cli are very convenient: they offer auto-completion, syntax highlighting, query history, a multi-line editor, and much more.
 
-SQL Shell makes using your favorite SQL client even more convenient:
+SQL Shell makes using SQL clients even more convenient:
 
 * a standard interface to enter connection parameters so you don't have to remember command line options
 * defaults for host name, port, and user to save you time
