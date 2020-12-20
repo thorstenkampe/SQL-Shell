@@ -4,7 +4,11 @@ import configparser, getpass, logging, pathlib, sys
 import sshtunnel
 
 ini_file = 'tunnel.ini'
-defaults = {'proxy_port': '22', 'proxy_user': getpass.getuser(), 'remote_host': 'localhost'}
+defaults = {
+    'proxy_port':  '22',
+    'proxy_user':  getpass.getuser(),
+    'remote_host': 'localhost'
+}
 
 config = configparser.ConfigParser(defaults=defaults)
 
@@ -37,8 +41,8 @@ def tunnel(remote_host, remote_port, local_port=0):  # `0` means random port
     except KeyError:
         # remote host is not in ini file so we don't need a real tunnel
         tunnel = MockTunnel(
-            local_bind_host     = remote_host,
-            local_bind_port     = remote_port
+            local_bind_host = remote_host,
+            local_bind_port = remote_port
         )
     else:
         tunnel = sshtunnel.SSHTunnelForwarder(
