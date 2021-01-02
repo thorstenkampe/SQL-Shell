@@ -68,9 +68,6 @@ def read_config():
     except KeyError:
         pass
 
-read_config()
-click.clear()
-
 class DbApp(NPSAppManaged):
     def onStart(self):
         self.registerForm('MAIN', DbParams())
@@ -307,4 +304,6 @@ class DbParams(ActionForm):
         click.pause()
         click.clear()
 
+read_config()
+click.clear()
 DbApp().run()
