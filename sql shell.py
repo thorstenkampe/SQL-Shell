@@ -297,7 +297,8 @@ class DbParams(ActionForm):
         except KeyboardInterrupt:
             pass
 
-        except (FileNotFoundError, ValueError, sshtunnel.BaseSSHTunnelForwarderError) as exception:
+        except (FileNotFoundError, ValueError, sshtunnel.BaseSSHTunnelForwarderError,
+                Exception) as exception:
             print(exception)
 
         print()
