@@ -13,31 +13,23 @@ widget_defaults = {
 
 dbms_defaults   = {
     'MSSQL': {
-        'port':   1433,
-        'user':   'sa',
         'shell':  'mssql-cli',
         'shell-windows': 'mssql-cli.bat',
         'legacy': 'sqlcmd'
     },
 
     'MySQL': {
-        'port':   3306,
-        'user':   'root',
         'shell':  'mycli',
         'legacy': 'mysql'
     },
 
     'Oracle': {
-        'port':   1521,
-        'user':   'sys',
         'shell':  'sql',
         'shell-windows': 'sql.exe',
         'legacy': 'sqlplus'
     },
 
     'PostgreSQL': {
-        'port':   5432,
-        'user':   'postgres',
         'shell':  'pgcli',
         'legacy': 'psql'
     },
@@ -142,8 +134,8 @@ class DbParams(ActionForm):
         except KeyError:
             dsn = ''
         host        = self.host.value or 'localhost'
-        port        = self.port.value or db_defaults.get('port')
-        user        = self.user.value or db_defaults.get('user')
+        port        = self.port.value or tb.defaults['port'].get(dbtype.lower())
+        user        = self.user.value or tb.defaults['db_user'].get(dbtype.lower())
         passwd      = self.passwd.value
         db          = self.db.value
 
@@ -229,8 +221,7 @@ class DbParams(ActionForm):
         # SPECIAL CASES FOR RDBMS
         if   dbtype == 'MSSQL':
             # named pipe connection to LocalDB
-            localdb = r'(localdb)\mssqllocaldb'
-            if localdb in dsn.lower() or host.lower() == localdb:
+            if tb.is_localdb(dsn) or tb.is_localdb(host):
                 opts.remove('-N')          # `-N` = "encrypt"  (NOSONAR)
                 conn_params[5] = '{host}'  # host,port -> host
 
