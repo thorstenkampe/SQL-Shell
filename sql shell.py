@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 
 import configparser, curses, os, pathlib, subprocess, sys
-import click, pycompat, sshtunnel
-import tunnel
+import click, pycompat
+import toolbox as tb, tunnel
 # https://npyscreen.readthedocs.io/
 from npyscreen import *  # NOSONAR
 
@@ -54,8 +54,8 @@ os.environ['ESCDELAY'] = '0'  # no delay on Linux for Escape key
 config = configparser.ConfigParser(delimiters='=')
 
 def read_config():
-    if getattr(sys, 'frozen', False):  # PyInstaller
-        # https://pyinstaller.readthedocs.io/en/stable/runtime-information.html
+    if tb.is_pyinstaller():
+        # https://pyinstaller.readthedocs.io/en/stable/runtime-information.html#using-sys-executable-and-sys-argv-0
         script_dir = sys.executable
     else:
         script_dir = __file__
@@ -297,8 +297,7 @@ class DbParams(ActionForm):
         except KeyboardInterrupt:
             pass
 
-        except (FileNotFoundError, ValueError, sshtunnel.BaseSSHTunnelForwarderError,
-                Exception) as exception:
+        except Exception as exception:
             print(exception)
 
         print()

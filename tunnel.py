@@ -2,6 +2,7 @@
 
 import configparser, getpass, logging, pathlib, sys
 import sshtunnel
+import toolbox as tb
 
 ini_file = 'tunnel.ini'
 defaults = {
@@ -27,7 +28,7 @@ class MockTunnel:
         pass
 
 def tunnel(remote_host, remote_port, local_port=0):  # `0` means random port
-    if getattr(sys, 'frozen', False):  # PyInstaller
+    if tb.is_pyinstaller():
         # https://pyinstaller.readthedocs.io/en/stable/runtime-information.html
         script_dir = sys.executable
     else:
