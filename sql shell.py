@@ -75,9 +75,18 @@ class DbParams(ActionForm):
         self.passwd = self.add(TitlePassword, name='- Password:', value=None, **widget_defaults)
 
     def adjust_widgets(self):
-        # hide host, port, database, user, and password field if DSN selected
         for field in self.host, self.port, self.db, self.user, self.passwd:
-            field.hidden = self.dsn.value
+            field.hidden = False
+
+        # hide host, port, database, user, and password field if DSN selected
+        if   self.dsn.value:
+            for field in self.host, self.port, self.db, self.user, self.passwd:
+                field.hidden = True
+
+        # disable editing host, port, user, and password field if SQLite selected
+        elif self.dbtype.value == 5:
+            for field in self.host, self.port, self.user, self.passwd:
+                field.hidden = True
 
         try:  # try to set database type field to database type from DSN label
             # ['...', '1. MSSQL: name = arguments', '2. <...>'] -> '1. MSSQL: name' ->
@@ -93,10 +102,6 @@ class DbParams(ActionForm):
             # field
             self.dbtype.editable = False
 
-        # disable editing host, port, user, and password field if SQLite selected
-        for field in self.host, self.port, self.user, self.passwd:
-            field.editable = self.dbtype.value != 5  # `5` is SQLite
-
         self.display()
 
     def on_cancel(self):
@@ -108,7 +113,7 @@ class DbParams(ActionForm):
             notify_confirm('Database type is mandatory!', title='ERROR', editw=True)
             return
 
-        if not (self.user.value or self.dbtype.value == 5):  # `5` is SQLite
+        if not (self.user.value or self.dsn.value or self.dbtype.value == 5):  # `5` is SQLite
             notify_confirm('User is mandatory!', title='ERROR', editw=True)
             return
 
