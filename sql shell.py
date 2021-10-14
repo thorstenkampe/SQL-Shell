@@ -12,10 +12,10 @@ widget_defaults = {
 }
 
 dbms_defaults   = {
-    'MSSQL':      {'shell': 'mssql-cli', 'shell-windows': 'mssql-cli.bat', 'legacy': 'sqlcmd'},
-    'MySQL':      {'shell': 'mycli', 'legacy': 'mysql'},
-    'Oracle':     {'shell': 'sql', 'shell-windows': 'sql.exe', 'legacy': 'sqlplus'},
-    'PostgreSQL': {'shell': 'pgcli', 'legacy': 'psql'},
+    'MSSQL':      {'shell': 'mssql-cli', 'shell-windows': 'mssql-cli.bat', 'legacy': 'sqlcmd', 'port': 1433},
+    'MySQL':      {'shell': 'mycli', 'legacy': 'mysql', 'port': 3306},
+    'Oracle':     {'shell': 'sql', 'shell-windows': 'sql.exe', 'legacy': 'sqlplus', 'port': 1521},
+    'PostgreSQL': {'shell': 'pgcli', 'legacy': 'psql', 'port': 5432},
     'SQLite':     {'shell': 'litecli', 'legacy': 'sqlite3'}
 }
 
@@ -75,7 +75,7 @@ class DbParams(ActionForm):
         self.passwd = self.add(TitlePassword, name='- Password:', value=None, **widget_defaults)
 
     def adjust_widgets(self):
-        # hide all fields except legacy client and database type if DSN selected
+        # hide host, port, database, user, and password field if DSN selected
         for field in self.host, self.port, self.db, self.user, self.passwd:
             field.hidden = self.dsn.value
 
@@ -93,6 +93,10 @@ class DbParams(ActionForm):
             # field
             self.dbtype.editable = False
 
+        # disable editing host, port, user, and password field if SQLite selected
+        for field in self.host, self.port, self.user, self.passwd:
+            field.editable = self.dbtype.value != 5  # `5` is SQLite
+
         self.display()
 
     def on_cancel(self):
@@ -104,6 +108,10 @@ class DbParams(ActionForm):
             notify_confirm('Database type is mandatory!', title='ERROR', editw=True)
             return
 
+        if not (self.user.value or self.dbtype.value == 5):  # `5` is SQLite
+            notify_confirm('User is mandatory!', title='ERROR', editw=True)
+            return
+
         read_config()
         dbtype      = list(dbms_defaults)[self.dbtype.value - 1]
         db_defaults = dbms_defaults[dbtype]
@@ -113,8 +121,8 @@ class DbParams(ActionForm):
         except KeyError:
             dsn = ''
         host        = self.host.value or 'localhost'
-        port        = self.port.value or tb.defaults['port'].get(dbtype.lower())
-        user        = self.user.value or tb.defaults['db_user'].get(dbtype.lower())
+        port        = self.port.value or db_defaults.get('port')
+        user        = self.user.value
         passwd      = self.passwd.value
         db          = self.db.value
 

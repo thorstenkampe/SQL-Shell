@@ -40,7 +40,7 @@ def tunnel(remote_host, remote_port, local_port=0):  # `0` means random port
     try:
         section = config[remote_host]
     except KeyError:
-        # remote host is not in ini file so we don't need a real tunnel
+        # remote host is not in ini file, so we don't need a real tunnel
         tunnel = MockTunnel(
             local_bind_host = remote_host,
             local_bind_port = remote_port

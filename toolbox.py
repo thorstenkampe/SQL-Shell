@@ -1,21 +1,5 @@
 import sys, urllib
 
-defaults = {
-    'port':    {
-        'mssql':      1433,
-        'mysql':      3306,
-        'oracle':     1521,
-        'postgresql': 5432
-    },
-
-    'db_user': {
-        'mssql':      'sa',
-        'mysql':      'root',
-        'oracle':     'sys',
-        'postgresql': 'postgres'
-    }
-}
-
 def is_localdb(dsn):
     localdb    = r'(localdb)\mssqllocaldb'
     parsed_url = urllib.parse.urlsplit(dsn)
