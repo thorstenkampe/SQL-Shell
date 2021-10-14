@@ -3,7 +3,7 @@ Modern SQL shells like SQLcl, mycli, pgcli, and mssql-cli are very convenient: t
 SQL Shell makes using SQL clients even more convenient:
 
 * a standard interface to enter connection parameters so you don't have to remember command line options
-* defaults for host name, port, and user to save you time
+* defaults for host name, and port to save you time
 * pre-defined connection strings for connection without typing
 * automatic tunneling if your database is behind a firewall or listening only on localhost interface
 * legacy client support
