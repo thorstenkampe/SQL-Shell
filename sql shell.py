@@ -6,18 +6,8 @@ import toolbox as tb, tunnel
 # https://npyscreen.readthedocs.io/
 from npyscreen import *  # NOSONAR
 
-widget_defaults = {
-    'use_two_lines':  False,
-    'begin_entry_at': 17
-}
-
-dbms_defaults   = {
-    'MSSQL':      {'shell': 'mssql-cli', 'shell-windows': 'mssql-cli.bat', 'legacy': 'sqlcmd', 'port': 1433},
-    'MySQL':      {'shell': 'mycli', 'legacy': 'mysql', 'port': 3306},
-    'Oracle':     {'shell': 'sql', 'shell-windows': 'sql.exe', 'legacy': 'sqlplus', 'port': 1521},
-    'PostgreSQL': {'shell': 'pgcli', 'legacy': 'psql', 'port': 5432},
-    'SQLite':     {'shell': 'litecli', 'legacy': 'sqlite3'}
-}
+widget_defaults = {'use_two_lines': False, 'begin_entry_at': 17}
+dbms_types      = ['MSSQL', 'MySQL', 'Oracle', 'PostgreSQL', 'SQLite']
 
 tunnel.logger.setLevel('DEBUG')
 os.environ['ESCDELAY'] = '0'  # no delay on Linux for Escape key
@@ -50,7 +40,7 @@ class DbParams(ActionForm):
         self.name   = 'Enter parameters for database'
 
         self.dbtype = self.add(TitleCombo, name='* Database type:', value=0, values=['...']
-                               + list(dbms_defaults), **widget_defaults)
+                               + dbms_types, **widget_defaults)
 
         self.legacy_client = self.add(TitleMultiSelect, name='- Legacy client:',
                                       value=None, values=[''], max_height=2, scroll_exit=True,
@@ -75,17 +65,19 @@ class DbParams(ActionForm):
         self.passwd = self.add(TitlePassword, name='- Password:', value=None, **widget_defaults)
 
     def adjust_widgets(self):
-        for field in self.host, self.port, self.db, self.user, self.passwd:
+        hide_fields = self.host, self.port, self.user, self.passwd
+
+        for field in hide_fields + (self.db,):
             field.hidden = False
 
         # hide host, port, database, user, and password field if DSN selected
         if   self.dsn.value:
-            for field in self.host, self.port, self.db, self.user, self.passwd:
+            for field in hide_fields + (self.db,):
                 field.hidden = True
 
-        # disable editing host, port, user, and password field if SQLite selected
+        # hide host, port, user, and password field if SQLite selected
         elif self.dbtype.value == 5:
-            for field in self.host, self.port, self.user, self.passwd:
+            for field in hide_fields:
                 field.hidden = True
 
         try:  # try to set database type field to database type from DSN label
@@ -94,7 +86,7 @@ class DbParams(ActionForm):
             _ = self.dsn.values[self.dsn.value].split()[1][:-1]
             # ['MSSQL', 'MySQL', ...].index('MSSQL') + 1 (offset by 1 because '...'
             # prepended in `dbtype.values`)
-            self.dbtype.value = list(dbms_defaults).index(_) + 1
+            self.dbtype.value = dbms_types.index(_) + 1
         except (IndexError, ValueError):
             self.dbtype.editable = True
         else:
@@ -118,18 +110,19 @@ class DbParams(ActionForm):
             return
 
         read_config()
-        dbtype      = list(dbms_defaults)[self.dbtype.value - 1]
-        db_defaults = dbms_defaults[dbtype]
-        shelltype   = dbtype if not self.legacy_client.value else f'{dbtype}-2'
+        dbtype = dbms_types[self.dbtype.value - 1]
+        if self.legacy_client.value:
+            shelltype = f'{dbtype}-2'
+        else:
+            shelltype = dbtype
         try:
             dsn = config['DSN'][list(config['DSN'])[self.dsn.value - 1]]
         except KeyError:
             dsn = ''
-        host        = self.host.value or 'localhost'
-        port        = self.port.value or db_defaults.get('port')
-        user        = self.user.value
-        passwd      = self.passwd.value
-        db          = self.db.value
+        host   = self.host.value or 'localhost'
+        user   = self.user.value
+        passwd = self.passwd.value
+        db     = self.db.value
 
         try:
             section = config[shelltype]
@@ -140,25 +133,21 @@ class DbParams(ActionForm):
         startup_file = section.get('startup_file', '')
         sqlhelp      = section.get('help')
 
-        if self.legacy_client.value:
-            defshell = db_defaults['legacy']
-        else:
-            if pycompat.system.is_windows:
-                try:
-                    defshell = db_defaults['shell-windows']
-                except KeyError:
-                    defshell = db_defaults['shell']
-            else:
-                defshell = db_defaults['shell']
-
-        sqlshell = section.get('shell', defshell)
-
         # CONNECTION PARAMETERS AND OPTIONS
         opts     = []
         env_vars = {}
 
         if   dbtype == 'MSSQL':
+            port        = self.port.value or 1433
             conn_params = ['-U', user, '-P', passwd, '-S', '{host},{port}', '-d', db]
+
+            if self.legacy_client.value:
+                defshell = 'sqlcmd'
+            else:
+                if pycompat.system.is_windows:
+                    defshell = 'mssql-cli.bat'
+                else:
+                    defshell = 'mssql-cli'
 
             # `-N -C` = "encrypt, trust server certificate"  (NOSONAR)
             if shelltype == 'MSSQL':
@@ -173,7 +162,13 @@ class DbParams(ActionForm):
                 opts.remove('-N')          # `-N` = "encrypt"  (NOSONAR)
 
         elif dbtype == 'MySQL':
+            port        = self.port.value or 3306
             conn_params = ['-u', user, '-h', '{host}', '-P', '{port}', '-D', db]
+
+            if self.legacy_client.value:
+                defshell = 'mysql'
+            else:
+                defshell = 'mycli'
 
             if passwd:
                 conn_params += [f'-p{passwd}']
@@ -188,7 +183,16 @@ class DbParams(ActionForm):
                     opts = [f'--defaults-file={startup_file}'] + opts
 
         elif dbtype == 'Oracle':
+            port        = self.port.value or 1521
             conn_params = [f'{user}/{passwd}@//{{host}}:{{port}}']
+
+            if self.legacy_client.value:
+                defshell = 'sqlplus'
+            else:
+                if pycompat.system.is_windows:
+                    defshell = 'sql.exe'
+                else:
+                    defshell = 'sql'
 
             if db:
                 # SQLcl can't handle `user@host/` connection strings
@@ -205,7 +209,13 @@ class DbParams(ActionForm):
                 env_vars = {'SQLPATH': ''}
 
         elif dbtype == 'PostgreSQL':
+            port        = self.port.value or 5432
             conn_params = [f'postgres://{user}:{passwd}@{{host}}:{{port}}/{db}']
+
+            if self.legacy_client.value:
+                defshell = 'psql'
+            else:
+                defshell = 'pgcli'
 
             if shelltype == 'PostgreSQL':
                 opts = ['--pgclirc', startup_file]
@@ -215,11 +225,20 @@ class DbParams(ActionForm):
                 env_vars = {'PSQLRC': startup_file}
 
         elif dbtype == 'SQLite':
+            # don't start tunnel for SQLite
+            host = None
+            port = None
+
             if db:
                 # replace "\" with "/" for litecli prompt
                 conn_params = [pathlib.Path(db).as_posix()]
             else:
                 conn_params = [db]
+
+            if self.legacy_client.value:
+                defshell = 'sqlite3'
+            else:
+                defshell = 'litecli'
 
             if shelltype == 'SQLite':
                 opts = ['--liteclirc', startup_file]
@@ -228,9 +247,8 @@ class DbParams(ActionForm):
             else:
                 opts = ['-init', startup_file]
 
-            # don't start tunnel for SQLite
-            host = None
-            port = None
+        # noinspection PyUnboundLocalVariable
+        sqlshell = section.get('shell', defshell)
 
         if self.dsn.value:
             # don't start tunnel for DSN connections
@@ -249,6 +267,7 @@ class DbParams(ActionForm):
 
         os.environ.update(env_vars)
         try:
+            # noinspection PyUnboundLocalVariable
             with tunnel.tunnel(host, port) as dbtunnel:
                 host = dbtunnel.local_bind_host
                 port = str(dbtunnel.local_bind_port)
