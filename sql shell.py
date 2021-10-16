@@ -11,23 +11,24 @@ dbms_types      = ['MSSQL', 'MySQL', 'Oracle', 'PostgreSQL', 'SQLite']
 
 tunnel.logger.setLevel('DEBUG')
 os.environ['ESCDELAY'] = '0'  # no delay on Linux for Escape key
+
+# Read config file
 # specify delimiter because of DSNs ("MSSQL: name = ...")
 config = configparser.ConfigParser(delimiters='=')
 
-def read_config():
-    if tb.is_pyinstaller():
-        # https://pyinstaller.readthedocs.io/en/stable/runtime-information.html#using-sys-executable-and-sys-argv-0
-        script_dir = sys.executable
-    else:
-        script_dir = __file__
-    # config file in same directory as this file
-    config_file = pathlib.Path(script_dir).with_name('sql shell.ini')
-    config.optionxform = str  # don't lowercase DSNs
-    config.read(config_file, encoding='utf-8')
-    try:
-        os.environ.update(config['Environment'])
-    except KeyError:
-        pass
+if tb.is_pyinstaller():
+    # https://pyinstaller.readthedocs.io/en/stable/runtime-information.html#using-sys-executable-and-sys-argv-0
+    script_dir = sys.executable
+else:
+    script_dir = __file__
+# config file in same directory as this file
+config_file = pathlib.Path(script_dir).with_name('sql shell.ini')
+config.optionxform = str  # don't lowercase DSNs
+config.read(config_file, encoding='utf-8')
+try:
+    os.environ.update(config['Environment'])
+except KeyError:
+    pass
 
 class DbApp(NPSAppManaged):
     def onStart(self):
@@ -42,11 +43,6 @@ class DbParams(ActionForm):
         self.dbtype = self.add(TitleCombo, name='* Database type:', value=0, values=['...']
                                + dbms_types, **widget_defaults)
 
-        self.legacy_client = self.add(TitleMultiSelect, name='- Legacy client:',
-                                      value=None, values=[''], max_height=2, scroll_exit=True,
-                                      **widget_defaults)
-
-        # DSNs changes in config file will not be updated in this widget
         try:
             dsns = ['...'] + [f'{index+1}. {item}' for index, item in enumerate(config['DSN'])]
         except KeyError:
@@ -109,12 +105,7 @@ class DbParams(ActionForm):
             notify_confirm('User is mandatory!', title='ERROR', editw=True)
             return
 
-        read_config()
         dbtype = dbms_types[self.dbtype.value - 1]
-        if self.legacy_client.value:
-            shelltype = f'{dbtype}-2'
-        else:
-            shelltype = dbtype
         try:
             dsn = config['DSN'][list(config['DSN'])[self.dsn.value - 1]]
         except KeyError:
@@ -125,13 +116,14 @@ class DbParams(ActionForm):
         db     = self.db.value
 
         try:
-            section = config[shelltype]
+            section = config[dbtype]
         except KeyError:
             section = {}
 
         prompt       = section.get('prompt', '')[1:-1]
         startup_file = section.get('startup_file', '')
         sqlhelp      = section.get('help')
+        legacy       = section.get('legacy')
 
         # CONNECTION PARAMETERS AND OPTIONS
         opts     = []
@@ -141,20 +133,17 @@ class DbParams(ActionForm):
             port        = self.port.value or 1433
             conn_params = ['-U', user, '-P', passwd, '-S', '{host},{port}', '-d', db]
 
-            if self.legacy_client.value:
+            if legacy:
                 defshell = 'sqlcmd'
+                opts     = ['-N', '-C']
+                env_vars = {'SQLCMDINI': startup_file}
             else:
                 if pycompat.system.is_windows:
                     defshell = 'mssql-cli.bat'
                 else:
                     defshell = 'mssql-cli'
-
-            # `-N -C` = "encrypt, trust server certificate"  (NOSONAR)
-            if shelltype == 'MSSQL':
-                opts     = ['-N', '-C', '--mssqlclirc', startup_file]
-            else:
-                opts     = ['-N', '-C']
-                env_vars = {'SQLCMDINI': startup_file}
+                # `-N -C` = "encrypt, trust server certificate"  (NOSONAR)
+                opts = ['-N', '-C', '--mssqlclirc', startup_file]
 
             # named pipe connection to LocalDB
             if tb.is_localdb(dsn) or tb.is_localdb(host):
@@ -165,34 +154,36 @@ class DbParams(ActionForm):
             port        = self.port.value or 3306
             conn_params = ['-u', user, '-h', '{host}', '-P', '{port}', '-D', db]
 
-            if self.legacy_client.value:
+            if legacy:
                 defshell = 'mysql'
-            else:
-                defshell = 'mycli'
-
-            if passwd:
-                conn_params += [f'-p{passwd}']
-
-            if shelltype == 'MySQL':
-                if startup_file:
-                    opts = ['--myclirc', startup_file]
-            else:
-                opts = ['--protocol=TCP']
+                opts     = ['--protocol=TCP']
                 if startup_file:
                     # `--defaults-file` must be first option
                     opts = [f'--defaults-file={startup_file}'] + opts
+
+            else:
+                defshell = 'mycli'
+                if startup_file:
+                    opts = ['--myclirc', startup_file]
+
+            if passwd:
+                conn_params += [f'-p{passwd}']
 
         elif dbtype == 'Oracle':
             port        = self.port.value or 1521
             conn_params = [f'{user}/{passwd}@//{{host}}:{{port}}']
 
-            if self.legacy_client.value:
+            if legacy:
                 defshell = 'sqlplus'
+                opts     = ['-l']
+                env_vars = {'SQLPATH': ''}
             else:
                 if pycompat.system.is_windows:
                     defshell = 'sql.exe'
                 else:
                     defshell = 'sql'
+                opts     = ['-logon']
+                env_vars = {'SQLPATH': startup_file}
 
             if db:
                 # SQLcl can't handle `user@host/` connection strings
@@ -201,28 +192,18 @@ class DbParams(ActionForm):
             if user == 'sys':
                 conn_params += ['as', 'sysdba']
 
-            if shelltype == 'Oracle':
-                opts     = ['-logon']
-                env_vars = {'SQLPATH': startup_file}
-            else:
-                opts     = ['-l']
-                env_vars = {'SQLPATH': ''}
-
         elif dbtype == 'PostgreSQL':
             port        = self.port.value or 5432
             conn_params = [f'postgres://{user}:{passwd}@{{host}}:{{port}}/{db}']
 
-            if self.legacy_client.value:
+            if legacy:
                 defshell = 'psql'
+                env_vars = {'PSQLRC': startup_file}
             else:
                 defshell = 'pgcli'
-
-            if shelltype == 'PostgreSQL':
-                opts = ['--pgclirc', startup_file]
+                opts     = ['--pgclirc', startup_file]
                 if prompt:
                     opts += ['--prompt', prompt]
-            else:
-                env_vars = {'PSQLRC': startup_file}
 
         elif dbtype == 'SQLite':
             # don't start tunnel for SQLite
@@ -235,17 +216,14 @@ class DbParams(ActionForm):
             else:
                 conn_params = [db]
 
-            if self.legacy_client.value:
+            if legacy:
                 defshell = 'sqlite3'
+                opts     = ['-init', startup_file]
             else:
                 defshell = 'litecli'
-
-            if shelltype == 'SQLite':
-                opts = ['--liteclirc', startup_file]
+                opts     = ['--liteclirc', startup_file]
                 if prompt:
                     opts += ['--prompt', prompt]
-            else:
-                opts = ['-init', startup_file]
 
         # noinspection PyUnboundLocalVariable
         sqlshell = section.get('shell', defshell)
@@ -286,6 +264,5 @@ class DbParams(ActionForm):
         click.pause()
         click.clear()
 
-read_config()
 click.clear()
 DbApp().run()
